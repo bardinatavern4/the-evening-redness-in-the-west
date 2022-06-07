@@ -49,7 +49,6 @@ meteor_act
 			SP.loc = organ
 			organ.embed(SP)
 
-
 /mob/living/carbon/human/hit_impact(damage, dir)
 	if(incapacitated(INCAPACITATION_DEFAULT|INCAPACITATION_BUCKLED_PARTIALLY))
 		return
@@ -510,3 +509,29 @@ meteor_act
 		perm += perm_by_part[part]
 
 	return perm
+
+/*Suppression Code! The intent is to make it hard for someone being shot at to return fire with perfect accuracy. This encourages players to either seek cover while under fire, instead
+of going John Rambo and running out into a hail of bullets without any fear. They can still return inaccurate fire to try to suppress the enemy in turn while they move. It also makes
+SUPPRESSING FIRE SARGE! a viable tactic, and gives rapid-fire weapons additional utility for keeping enemies heads down.*/
+
+/mob/living/carbon/human/proc/suppression_act(var/obj/item/projectile/P)
+	if(!client)
+		return
+	var/seconds_since_suppression = (world.time - time_last_suppressed)/10
+	if(seconds_since_suppression <= 1)
+		shake_camera(src,4,2)
+		overlay_fullscreen("suppress",/obj/screen/fullscreen/suppression, 6)
+		//severe supression effects
+	else if(seconds_since_suppression <=5)
+		shake_camera(src,2,1)
+		overlay_fullscreen("suppress",/obj/screen/fullscreen/suppression, 5)
+		//medium supression effects
+	else if(seconds_since_suppression <=10)
+		overlay_fullscreen("suppress",/obj/screen/fullscreen/suppression, 4)
+		//low supression effects
+	else if(seconds_since_suppression > 10)
+		clear_fullscreens()
+		if(prob(40))
+			visible_message("<span class = 'danger'>The [P.name] whizzes past [src]!</span>")
+			playsound(loc, 'sound/effects/whiz-supersonic.wav', 60, 1, -1)
+	time_last_suppressed = world.time

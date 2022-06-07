@@ -497,6 +497,10 @@
 					if(Bump(original))
 						return
 
+		if(first_step != TRUE)
+			spawn()
+				do_suppression_aoe(loc)
+
 		if(first_step)
 			muzzle_effect(effect_transform)
 			first_step = FALSE
@@ -598,6 +602,10 @@
 			P.pixel_x = location.pixel_x
 			P.pixel_y = location.pixel_y
 			P.activate(P.lifetime)
+//suppression AOE
+/obj/item/projectile/proc/do_suppression_aoe(var/location)
+	for(var/mob/living/carbon/human/h in orange(1,location))
+		h.suppression_act(src)
 
 //"Tracing" projectile
 /obj/item/projectile/test //Used to see if you can hit them.

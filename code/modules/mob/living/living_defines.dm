@@ -48,6 +48,9 @@
 	var/list/datum/action/actions = list()
 	var/step_count = 0
 
+	var/list/suppression_icons = list()
+	var/time_last_suppressed = 0
+
 	var/update_slimes = 1
 	var/is_busy = FALSE // Prevents stacking of certain actions, like resting and diving
 	var/silent 		// Can't talk. Value goes down every life proc.
